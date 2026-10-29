@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'larifita-v10.0-XUPASTACK';
+const CACHE_VERSION = 'larifita-v11.0-XUPASTACK';
 const CACHE_STATIC = 'larifita-static-' + CACHE_VERSION;
 const CACHE_DYNAMIC = 'larifita-dynamic-' + CACHE_VERSION;
 const MAX_DINAMICO = 60;
