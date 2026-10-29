@@ -9,9 +9,8 @@
 // ============================================
 // BLOQUE 1: CONFIGURACIÓN Y HELPERS BASE
 // ============================================
-const SUPABASE_URL = 'https://larifita-cubana-gw.xupastack.com';
+const SUPABASE_URL = 'https://playxuaxwbdokvdjtmql.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_0ilK-0x_jA5eZoM0WYI3JQ_Wf10PGfs';
-
 let supabaseClient;
 if (window.supabase) {
   supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
