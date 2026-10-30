@@ -1,6 +1,12 @@
-const CACHE_VERSION = 'larifita-v11.0-XUPASTACK';
-const CACHE_STATIC = 'larifita-static-' + CACHE_VERSION;
-const CACHE_DYNAMIC = 'larifita-dynamic-' + CACHE_VERSION;
+// ============================================================
+// SW.JS - LA RIFITA CUBANA (V12.0 AUTO-ACTUALIZABLE)
+// Estrategia: Red Primero para código, Caché para imágenes
+// ============================================================
+
+// Usamos una versión fija. Como usaremos "Red Primero", 
+// no importa si no cambiamos este número, siempre buscará lo nuevo.
+const CACHE_STATIC = 'larifita-static-v12';
+const CACHE_DYNAMIC = 'larifita-dynamic-v12';
 const MAX_DINAMICO = 60;
 
 const ASSETS_ESTATICOS = [
@@ -46,7 +52,7 @@ function recortarCache(nombre, maximo) {
 }
 
 self.addEventListener('install', function(event) {
-  self.skipWaiting();
+  self.skipWaiting(); // Fuerza la activación inmediata del nuevo SW
   event.waitUntil(
     caches.open(CACHE_STATIC).then(function(cache) {
       return Promise.all(
@@ -64,6 +70,7 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(keys) {
       return Promise.all(keys.map(function(k) {
+        // Borra cualquier caché que no sea la actual
         if (k !== CACHE_STATIC && k !== CACHE_DYNAMIC) {
           return caches.delete(k);
         }
@@ -82,24 +89,51 @@ self.addEventListener('message', function(event) {
 
 self.addEventListener('fetch', function(event) {
   if (event.request.method !== 'GET') return;
-
+  
   var url;
   try { url = new URL(event.request.url); } catch (e) { return; }
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
   if (esRutaSinCache(url)) return;
-
-  var esEstatico = event.request.mode === 'navigate' ||
-    /\.(js|html|css|json)$/.test(url.pathname) ||
+  
+  // --- ESTRATEGIA RED PRIMERO PARA CÓDIGO (HTML, JS, CSS, JSON) ---
+  // Esto asegura que siempre tengas la última versión al instante.
+  var esCodigo = event.request.mode === 'navigate' || /\.(js|html|css|json)$/.test(url.pathname);
+  
+  if (esCodigo) {
+    event.respondWith(
+      fetch(event.request)
+      .then(function(response) {
+        // Si hay internet, guardamos la copia nueva y servimos la nueva
+        if (response && response.ok) {
+          var copia = response.clone();
+          caches.open(CACHE_STATIC).then(function(cache) {
+            cache.put(event.request, copia);
+          }).catch(function() {});
+        }
+        return response;
+      })
+      .catch(function() {
+        // Si falla el internet, usamos la guardada (Offline)
+        return caches.match(event.request).then(function(cached) {
+          return cached || respuestaOffline(event.request);
+        });
+      })
+    );
+    return;
+  }
+  
+  // --- ESTRATEGIA CACHÉ PRIMERO PARA IMÁGENES (Para que carguen rápido) ---
+  var esImagen = /\.(png|jpg|jpeg|gif|webp|svg)$/.test(url.pathname) ||
     url.hostname.indexOf('dicebear') !== -1 ||
     url.hostname.indexOf('postimg') !== -1;
-
-  if (esEstatico) {
+  
+  if (esImagen) {
     event.respondWith(
       caches.match(event.request).then(function(cached) {
+        // Si está en caché, la servimos de inmediato y actualizamos en 2do plano
         var red = fetch(event.request).then(function(response) {
-          // FIX: Solo cachear si la respuesta es válida
-          if (response && response.ok && response.type !== 'opaque') {
-            var copia = response.clone(); // FIX: Clonar ANTES de devolver
+          if (response && response.ok) {
+            var copia = response.clone();
             caches.open(CACHE_STATIC).then(function(cache) {
               cache.put(event.request, copia);
             }).catch(function() {});
@@ -113,7 +147,8 @@ self.addEventListener('fetch', function(event) {
     );
     return;
   }
-
+  
+  // --- RESTO DE PETICIONES (Dinámicas) ---
   event.respondWith(
     fetch(event.request).then(function(response) {
       if (response && response.ok) {
@@ -132,16 +167,17 @@ self.addEventListener('fetch', function(event) {
   );
 });
 
+// --- PUSH NOTIFICATIONS (Mantenemos tu código intacto) ---
 self.addEventListener('push', function(event) {
   if (!event.data) return;
-
+  
   var data = {};
   try {
     data = event.data.json();
   } catch (e) {
     data = { body: event.data.text() };
   }
-
+  
   const opciones = {
     body: data.body || data.mensaje || data.message || 'Nuevo aviso de La Rifita Cubana',
     icon: 'https://i.postimg.cc/J4FCWf5y/Picsart-26-10-16-06-30-57-665.jpg',
@@ -152,23 +188,21 @@ self.addEventListener('push', function(event) {
   event.waitUntil(self.registration.showNotification(data.title || data.titulo || 'La Rifita Cubana', opciones));
 });
 
+// --- CLICK EN NOTIFICACIÓN (Mantenemos tu código intacto) ---
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   var destino = (event.notification.data && event.notification.data.url) || './index.html';
   
-  // FIX: Buscar ventanas abiertas y enfocarlas
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(windowClients) {
       for (var i = 0; i < windowClients.length; i++) {
         var client = windowClients[i];
-        // Si ya está abierta, solo enfocar
         if (client.url.indexOf(self.registration.scope) === 0 && 'focus' in client) {
           return client.focus();
         }
       }
-      // Si no, abrir una nueva
-      if (clients.openWindow) { 
-        return clients.openWindow(destino); 
+      if (clients.openWindow) {
+        return clients.openWindow(destino);
       }
     })
   );

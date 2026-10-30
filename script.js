@@ -8937,5 +8937,32 @@ window.addEventListener('popstate', function() {
   }
 });
 
+// ============================================================
+// AUTO-ACTUALIZACIÓN DE LA APP (Pegar al final del script.js)
+// ============================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+      // Detectar si hay una versión nueva
+      reg.addEventListener('updatefound', function() {
+        var newWorker = reg.installing;
+        newWorker.addEventListener('statechange', function() {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('🔄 Nueva versión detectada. Recargando la app...');
+            // Recargar automáticamente
+            window.location.reload();
+          }
+        });
+      });
+    }).catch(function(err) {
+      console.warn('Error registrando el SW:', err);
+    });
+
+    // Si el Service Worker ya estaba activo, escuchar el cambio
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      window.location.reload();
+    });
+  });
+}
 console.log('🇨🇺 LA RIFITA CUBANA — SCRIPT.JS FINALIZADO CORRECTAMENTE.');
 console.log('📱 App lista para producción. Los 3 errores visuales han sido corregidos.');
