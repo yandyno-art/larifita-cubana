@@ -16,22 +16,22 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "https://i.postimg.cc/J4FCWf5y/Picsart-26-10-16-06-30-57-665.jpg",
+      "src": "./logo.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://i.postimg.cc/J4FCWf5y/Picsart-26-10-16-06-30-57-665.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://i.postimg.cc/J4FCWf5y/Picsart-26-10-16-06-30-57-665.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "./logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
