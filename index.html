@@ -126,7 +126,8 @@
           <label for="reg-recordar" class="label-checkbox-rifita" style="color:#FFD700; font-size:13px; cursor:pointer; margin:0; font-weight:normal;">Recuérdame</label>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
-          <input type="checkbox" id="reg-terminos" class="checkbox-rifita" onchange="if(this.checked) { mostrarTerminos(); }" style="width:22px; height:22px; accent-color:#FFD700; margin:0; cursor:pointer; display:inline-block; flex-shrink:0;">
+          <!-- 🆕 V15.0: quitado el onchange para que NO abra el modal automáticamente -->
+          <input type="checkbox" id="reg-terminos" class="checkbox-rifita" style="width:22px; height:22px; accent-color:#FFD700; margin:0; cursor:pointer; display:inline-block; flex-shrink:0;">
           <span onclick="document.getElementById('reg-terminos').checked = true; mostrarTerminos();" style="color:#fff; font-size:13px; cursor:pointer;">Acepto <span style="color:#FFD700; text-decoration:underline; font-weight:bold;">Términos y Condiciones</span></span>
         </div>
       </div>
