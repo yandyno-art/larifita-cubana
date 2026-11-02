@@ -1,1 +1,4 @@
-https://larifitacubanaoficial.abrdns.com
+<resources>
+    <string name="app_name">La Rifita Cubana</string>
+    <string name="asset_statements">[{\"relation\": [\"delegate_permission/common.handle_all_urls\"], \"target\": {\"namespace\": \"web\", \"site_url\": \"https://larifitacubanaoficial.abrdns.com\"}}]</string>
+</resources>
