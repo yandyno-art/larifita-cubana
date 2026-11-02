@@ -1,0 +1,11 @@
+name: Obtener Huella SHA-256
+on: workflow_dispatch
+jobs:
+  get_sha:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decodificar Keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+      - name: Mostrar Huella
+        run: |
+          keytool -list -v -keystore release.keystore -storepass larifita2026 | grep SHA256
