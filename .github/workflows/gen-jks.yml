@@ -1,0 +1,23 @@
+name: Generar Llave JKS
+on: workflow_dispatch
+
+jobs:
+  gen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Generar llave
+        run: |
+          keytool -genkeypair -v -keystore release.keystore -storetype JKS -alias larifita \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass larifita2026 -keypass larifita2026 \
+            -dname "CN=LaRifita, OU=Dev, O=Dev, L=Havana, ST=Havana, C=CU"
+      - name: Convertir a Base64
+        run: base64 -w 0 release.keystore > keystore.b64
+      - name: Mostrar Base64
+        run: cat keystore.b64
