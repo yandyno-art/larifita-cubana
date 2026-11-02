@@ -14,7 +14,7 @@
             android:name="asset_statements"
             android:resource="@string/asset_statements" />
         <meta-data
-            android:name="default_url"
+            android:name="android.support.customtabs.trusted.DEFAULT_URL"
             android:value="https://larifitacubanaoficial.abrdns.com" />
     </application>
 </manifest>
