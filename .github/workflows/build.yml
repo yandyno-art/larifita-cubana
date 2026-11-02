@@ -21,6 +21,11 @@ jobs:
       - name: Decode Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/release.keystore
 
+      # ESTE ES EL PASO MÁGICO
+      - name: Mostrar Huella SHA-256 (COPIAR ESTO)
+        run: |
+          keytool -list -v -keystore app/release.keystore -storepass larifita2026 | grep SHA256
+
       - name: Build Release APK
         run: gradle assembleRelease
         env:
