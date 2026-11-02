@@ -13,5 +13,8 @@
         <meta-data
             android:name="asset_statements"
             android:resource="@string/asset_statements" />
+        <meta-data
+            android:name="default_url"
+            android:value="https://larifitacubanaoficial.abrdns.com" />
     </application>
 </manifest>
