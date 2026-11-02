@@ -4,18 +4,18 @@
     <application
         android:label="La Rifita Cubana"
         android:icon="@mipmap/ic_launcher"
-        android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.NoTitleBar">
+        android:theme="@android:style/Theme.Translucent.NoTitleBar">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- ESTA ES LA ETIQUETA OFICIAL PARA LA URL -->
+            <!-- ESTO OBLIGA A ABRIR TU URL -->
             <meta-data
                 android:name="android.support.customtabs.trusted.DEFAULT_URL"
                 android:value="https://larifitacubanaoficial.abrdns.com" />
         </activity>
+        <!-- ESTO CONECTA CON EL ARCHIVO DE LA HUELLA -->
         <meta-data
             android:name="asset_statements"
             android:resource="@string/asset_statements" />
