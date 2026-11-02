@@ -3,8 +3,8 @@
 // Estrategia: Red Primero para código, Caché para imágenes y CDNs
 // ============================================================
 
-const CACHE_STATIC = 'larifita-static-v15';
-const CACHE_DYNAMIC = 'larifita-dynamic-v15';
+const CACHE_STATIC = 'larifita-static-v16';
+const CACHE_DYNAMIC = 'larifita-dynamic-v16';
 const MAX_DINAMICO = 60;
 
 const ASSETS_ESTATICOS = [
