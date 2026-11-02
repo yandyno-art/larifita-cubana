@@ -9238,35 +9238,78 @@ function cargarTema() {
   }
 }
 
-// FIX V15.2: Comprime a 500px / 40% calidad (reduce peso sin perder calidad visible)
+// FIX V15.3: Compresión Inteligente (Calidad Alta + Peso Ultra Bajo)
 function comprimirImagen(archivo) {
   return new Promise(function(resolve, reject) {
     try {
       if (!archivo) { reject(new Error('Archivo inválido')); return; }
       var reader = new FileReader();
       reader.readAsDataURL(archivo);
+      
       reader.onload = function(event) {
         var img = new Image();
         img.src = event.target.result;
+        
         img.onload = function() {
           try {
             var canvas = document.createElement('canvas');
-            var MAX_WIDTH = 500;
+            
+            // Aumentamos a 800px para que el texto sea legible
+            var MAX_WIDTH = 800;
+            var MAX_HEIGHT = 1200; // Para capturas de pantalla largas (tipo teléfono)
+            
             var width = img.width;
             var height = img.height;
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
+
+            // Mantener proporción
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+              }
             }
+            
             canvas.width = width;
             canvas.height = height;
             var ctx = canvas.getContext('2d');
+            
+            // Fondo blanco (por si la imagen original es PNG transparente)
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Dibujamos con suavizado para que no se pixele
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, width, height);
+
+            // TRUCO MAESTRO: Intentar usar WebP, si no, usar JPG
+            var formato = 'image/jpeg';
+            var calidad = 0.6; // Calidad media-alta
+
+            // Verificamos si el teléfono soporta WebP (El 99% de los Android modernos sí)
+            var testWebP = canvas.toDataURL('image/webp');
+            if (testWebP.indexOf('data:image/webp') === 0) {
+              formato = 'image/webp';
+              calidad = 0.75; // En WebP, 0.75 se ve PERFECTO y pesa menos que un JPG al 0.6
+            }
+
             canvas.toBlob(function(blob) {
               if (!blob) { reject(new Error('No se pudo comprimir')); return; }
-              var file = new File([blob], (archivo.name || 'imagen.jpg'), { type: 'image/jpeg' });
+              
+              // Renombramos el archivo según el formato
+              var extension = formato === 'image/webp' ? '.webp' : '.jpg';
+              var nombreLimpio = (archivo.name || 'imagen').split('.')[0];
+              var file = new File([blob], (nombreLimpio + extension), { type: formato });
+              
+              console.log("🖼️ Imagen comprimida: " + Math.round(archivo.size/1024) + "KB -> " + Math.round(blob.size/1024) + "KB");
               resolve(file);
-            }, 'image/jpeg', 0.4);
+            }, formato, calidad);
+            
           } catch(e) { reject(e); }
         };
         img.onerror = function() { reject(new Error('Imagen inválida')); };
