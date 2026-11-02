@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:label="La Rifita Cubana"
-        android:icon="@drawable/logo"
         android:theme="@android:style/Theme.Translucent.NoTitleBar">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
@@ -11,7 +10,7 @@
             </intent-filter>
         </activity>
         <meta-data
-            android:name="android.support.customtabs.trusted.DEFAULT_URL"
+            android:name="default_url"
             android:value="https://larifitacubanaoficial.abrdns.com" />
         <meta-data
             android:name="asset_statements"
