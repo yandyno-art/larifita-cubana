@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.larifita.cubana",
+    "sha256_cert_fingerprints": ["4B:87:42:5C:08:0A:29:37:E6:FE:0A:64:49:61:32:E2:F3:6F:46:F2:E2:E6:10:F8:FD:4E:27:4D:F4:E0:7A:6D"]
+  }
+}]
