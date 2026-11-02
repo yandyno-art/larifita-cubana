@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="La Rifita Cubana"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.NoTitleBar">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- ESTA ES LA ETIQUETA OFICIAL PARA LA URL -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.DEFAULT_URL"
+                android:value="https://larifitacubanaoficial.abrdns.com" />
         </activity>
-        <meta-data
-            android:name="default_url"
-            android:value="https://larifitacubanaoficial.abrdns.com" />
         <meta-data
             android:name="asset_statements"
             android:resource="@string/asset_statements" />
